@@ -4,6 +4,8 @@ import urllib
 s3 = boto3.resource('s3')
 bucket = s3.Bucket('storagepennapps19')
 
+s3_client = boto3.client('s3')
+
 def put(key, obj):
     bucket.put_object(Key=key, Body=obj)
 
@@ -27,5 +29,7 @@ def lambda_handler(event, context):
         put(key, data)
         return 'ok'
     if op == 'get': # get object from bucket
-        data = bucket.get_object(key)
+        key = payload['key']
+        response = s3_client.get_object(Bucket='storagepennapps19', Key=key)
+        data = response['Body'].read().decode()
         return data
