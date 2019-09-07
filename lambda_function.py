@@ -19,6 +19,9 @@ def download_source(source):
 #   key - to store object in bucket
 # op - 'get'
 #   key - stored object in bucket
+# op - 'put'
+#   data - raw file data to upload as new object in bucket
+#   key - to store the file in bucket
 def lambda_handler(event, context):
     op = event['op']
     payload = event['payload']
@@ -33,3 +36,8 @@ def lambda_handler(event, context):
         response = s3_client.get_object(Bucket='storagepennapps19', Key=key)
         data = response['Body'].read().decode()
         return data
+    if op == 'put': # put raw file data as new object
+        data = payload['data']
+        key = payload['key']
+        put(key, data)
+        return 'ok'
