@@ -1,9 +1,12 @@
 import boto3
+import urllib
 
 s3 = boto3.resource('s3')
 
-for bucket in s3.buckets.all():
-    print(bucket.name)
-
-data = open('ducks.png', 'rb')
-print(s3.Bucket('storagepennapps19').put_object(Key='ducks', Body=data))
+def lambda_handler(event, context):
+    source = event['source']
+    key = event['key']
+    response = urllib.request.urlopen(source)
+    data = response.read()
+    print(data)
+    s3.Bucket('storagepennapps19').put_object(Key=key, Body=data)
