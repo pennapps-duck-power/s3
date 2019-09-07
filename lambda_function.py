@@ -27,4 +27,5 @@ def lambda_handler(event, context):
         put(key, data)
         return 'ok'
     if op == 'get': # get object from bucket
-        pass
+        data = bucket.get_object(key)
+        return data
